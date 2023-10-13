@@ -15,6 +15,9 @@ src/main.cpp
 src/textDocument/doc.cpp
 src/Graphics/editorView.hpp
 src/textDocument/doc.hpp
+src/Graphics/editorView.cpp
+src/Events/editorEvents.hpp
+src/Events/editorEvents.cpp
 
 
 )
