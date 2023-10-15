@@ -32,7 +32,7 @@ private:
   sf::View _camera;
 
   void _drawStrings(TextDoc& doc);
-  void _drawCursor(sf::RenderWindow& window);
+  void _drawTextCursor(sf::RenderWindow& window);
 
   sf::Font _font;
   int _fontSize;
@@ -48,4 +48,10 @@ private:
 
   sf::Color _colorMargin;
   sf::Color _charColor;
+
+  float _bottomPixelLimit;
+  float _rightPixelLimit;
+
+  int _lineHeight; // is used to increase bottom and upper limit so scroll will
+  int _charWidth;  // work.
 };

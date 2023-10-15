@@ -15,10 +15,13 @@ EditorView::EditorView(sf::RenderWindow& window,
   , _window(window)
 {
   _font.loadFromFile("../../fonts/JetBrainsMono-Regular.ttf");
-  setFontSize(12);
+  setFontSize(18);
   _marginOffset_x = 40;
   _colorMargin = sf::Color(32, 44, 68);
   _charColor = sf::Color::White;
+
+  _windowLength = _window.getSize().x;
+  _windowWidth = _window.getSize().y;
 }
 
 void
@@ -53,55 +56,98 @@ EditorView::drawWindow(sf::RenderWindow& window)
 void
 EditorView::scrollUp()
 {
+  float height = _window.getView().getSize().y;
+  auto currentCamPos = _camera.getCenter();
+
+  // if i'm not in the first half of the view
+  // greater than and -delta because the y val go up when we go down
+  if (currentCamPos.y > height / 2) {
+    _camera.move(0, -_deltaScroll);
+  }
 }
 
 void
 EditorView::scrollDown()
 {
+  float height = _window.getView().getSize().y;
+  auto currentCamPos = _camera.getCenter();
+  float bottomLimit = std::max(_bottomPixelLimit, height);
+
+  if (currentCamPos.y < (height / 2) - bottomLimit + 20) {
+    _camera.move(0, _deltaScroll);
+  }
 }
 
 void
 EditorView::scrollLeft()
 {
+  float width = _window.getView().getSize().x;
+  auto currentCamPos = _camera.getCenter();
+
+  if (currentCamPos.x - width / 2 > -_marginOffset_x) {
+    _camera.move(-_deltaScroll, 0);
+  }
 }
 
 void
 EditorView::scrollRight()
 {
+  float width = _window.getView().getSize().x;
+  float rightLimit = std::max(_rightPixelLimit, width);
+  auto camPos = _camera.getCenter();
+  // Numero magico 20 como un plus
+  if (camPos.x + width / 2 < rightLimit + 20) {
+    _camera.move(_deltaScroll, 0);
+  }
 }
 
 void
 EditorView::scrollTo(float x, float y)
 {
+  if (x < _rightPixelLimit && y < _bottomPixelLimit) {
+    _camera.move(x, y);
+  }
 }
 
 int
 EditorView::getWindowWidth()
 {
-  return 0;
+  return _windowWidth;
 }
 
 int
 EditorView::getWindowLength()
 {
-  return 0;
+  return _windowLength;
 }
 
 sf::View
 EditorView::getCameraView()
 {
-  return sf::View();
+  return _camera;
 }
 
 void
 EditorView::setCamera(int width, int height)
 {
+  _camera = sf::View(sf::FloatRect(-50, 0, width, height));
 }
 
 void
 EditorView::setFontSize(int size)
 {
   _fontSize = size;
+  _lineHeight = _fontSize;
+
+  // This a trick to find char width, only works because we are using monospace
+  // font(we get the char width of a wide character)
+
+  sf::Text tmpText;
+  tmpText.setFont(_font);
+  tmpText.setCharacterSize(_fontSize);
+  tmpText.setString("_");
+  float textwidth = tmpText.getLocalBounds().width;
+  _charWidth = textwidth;
 }
 
 void
@@ -123,8 +169,7 @@ EditorView::_drawStrings(TextDoc& doc)
     newString.setPosition(cord);
     newString.setFont(_font);
     newString.setCharacterSize(_fontSize);
-    cord.y += 10; // TODO change "magic number" to formula so the text will
-                  // offset corectly with scaling of font size.
+    cord.y += _fontSize;
 
     if (_window.isOpen()) {
       _window.draw(newString);
@@ -135,6 +180,6 @@ EditorView::_drawStrings(TextDoc& doc)
 }
 
 void
-EditorView::_drawCursor(sf::RenderWindow& window)
+EditorView::_drawTextCursor(sf::RenderWindow& window)
 {
 }

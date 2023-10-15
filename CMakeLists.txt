@@ -18,7 +18,8 @@ src/textDocument/doc.hpp
 src/Graphics/editorView.cpp
 src/Events/editorEvents.hpp
 src/Events/editorEvents.cpp
-
+src/TextCursor/TextCursor.cpp
+src/TextCursor/TextCursor.hpp
 
 )
 target_link_libraries(fiber PRIVATE sfml-graphics)
