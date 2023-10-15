@@ -6,7 +6,7 @@
 class TextCursor
 {
 public:
-  TextCursor(TextDoc& doc, int initial_x = 0, int initial_y = 0);
+  TextCursor(TextDoc& doc, int initial_x, int initial_y);
   ~TextCursor(){};
   // setters
   void moveOneUp();
