@@ -20,7 +20,8 @@ src/Events/editorEvents.hpp
 src/Events/editorEvents.cpp
 src/TextCursor/TextCursor.cpp
 src/TextCursor/TextCursor.hpp
-
+src/Handlers/EventHandler.cpp
+src/Handlers/EventHandler.hpp
 )
 target_link_libraries(fiber PRIVATE sfml-graphics)
 target_compile_features(fiber PRIVATE cxx_std_17)
