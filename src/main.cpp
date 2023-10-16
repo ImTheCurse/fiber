@@ -8,9 +8,10 @@ int
 main()
 {
   TextDoc doc("test.txt");
+  TextCursor TextCursor(doc);
   sf::Color backgroundColor = sf::Color(21, 29, 45);
   sf::RenderWindow window(sf::VideoMode(800, 600), "Fiber");
-  EditorEvents event(doc);
+  EditorEvents event(doc, TextCursor);
   EditorView editorView(window, event, doc);
 
   // run the program as long as the window is open

@@ -6,7 +6,7 @@
 class TextCursor
 {
 public:
-  TextCursor(TextDoc& doc, int initial_x, int initial_y);
+  TextCursor(TextDoc& doc, int initial_x = 0, int initial_y = 0);
   ~TextCursor(){};
   // setters
   void moveOneUp();
@@ -22,6 +22,7 @@ public:
   // getters
   int getCurrentLine();
   int getCurrentCharIdx();
+  std::pair<int, int> getCurrentPos();
 
 private:
   TextDoc& _doc;

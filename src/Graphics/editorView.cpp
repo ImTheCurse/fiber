@@ -1,4 +1,5 @@
 #include "editorView.hpp"
+#include "../TextCursor/TextCursor.hpp"
 #include <iostream>
 
 EditorView::EditorView(sf::RenderWindow& window,
@@ -180,6 +181,18 @@ EditorView::_drawStrings(TextDoc& doc)
 }
 
 void
-EditorView::_drawTextCursor(sf::RenderWindow& window)
+EditorView::_drawTextCursor(sf::RenderWindow& window, TextCursor textCursor)
 {
+  int curr_x_pos = textCursor.getCurrentPos().first * _charWidth;
+  //(textCursor.getCurrentPos().second * _fontSize) is the offset for spacing
+  // between lines.
+  int curr_y_pos = textCursor.getCurrentPos().second * _lineHeight +
+                   (textCursor.getCurrentPos().second * _fontSize);
+  int cursorDrawWidth = 2;
+
+  sf::Vector2f rec(cursorDrawWidth, _lineHeight);
+  sf::RectangleShape cursorShape(rec);
+  cursorShape.setPosition(curr_x_pos, curr_y_pos);
+  cursorShape.setFillColor(sf::Color::White);
+  window.draw(cursorShape);
 }

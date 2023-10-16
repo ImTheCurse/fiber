@@ -1,6 +1,6 @@
 #include "TextCursor.hpp"
 #include <string>
-TextCursor::TextCursor(TextDoc& doc, int initial_x = 0, int initial_y = 0)
+TextCursor::TextCursor(TextDoc& doc, int initial_x, int initial_y)
   : _doc(doc)
 {
   _currentPos.first = initial_x;
@@ -90,4 +90,9 @@ int
 TextCursor::getCurrentCharIdx()
 {
   return _charIdx;
+}
+std::pair<int, int>
+TextCursor::getCurrentPos()
+{
+  return _currentPos;
 }

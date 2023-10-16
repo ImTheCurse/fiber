@@ -32,7 +32,7 @@ private:
   sf::View _camera;
 
   void _drawStrings(TextDoc& doc);
-  void _drawTextCursor(sf::RenderWindow& window);
+  void _drawTextCursor(sf::RenderWindow& window, TextCursor textCursor);
 
   sf::Font _font;
   int _fontSize;
