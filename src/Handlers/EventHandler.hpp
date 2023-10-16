@@ -3,11 +3,10 @@
 
 #include "../Graphics/editorView.hpp"
 #include "../TextCursor/TextCursor.hpp"
-#include "../TextDocument/doc.hpp"
 
 class EventHandler {
   public:
-    EventHandler(EditorView& editorView, TextCursor& textCursor, TextDoc& doc /*,Selection &sel*/);
+    EventHandler(EditorView& editorView, TextCursor& textCursor /*,Selection &sel*/);
 
     void handleEvents(EditorView& view, sf::RenderWindow& window, sf::Event& event);
 
