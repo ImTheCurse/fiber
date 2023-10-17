@@ -1,57 +1,60 @@
 #pragma once
-#include "../Events/editorEvents.hpp"
-#include "../textDocument/doc.hpp"
 #include <SFML/Graphics.hpp>
 
-class EditorView
-{
-public:
-  EditorView(sf::RenderWindow& window, EditorEvents& events, TextDoc& doc);
-  void drawWindow(sf::RenderWindow& window);
+#include "../Events/editorEvents.hpp"
+#include "../Handlers/EventHandler.hpp"
+#include "../textDocument/doc.hpp"
 
-  void scrollUp();
-  void scrollDown();
-  void scrollLeft();
-  void scrollRight();
-  void scrollTo(float x, float y);
+class EditorView {
+  public:
+    EditorView(sf::RenderWindow& window, EditorEvents& events, TextDoc& doc);
+    void drawWindow(sf::RenderWindow& window);
 
-  // getters
-  int getWindowWidth();
-  int getWindowLength();
+    void scrollUp();
+    void scrollDown();
+    void scrollLeft();
+    void scrollRight();
+    void scrollTo(float x, float y);
 
-  sf::View getCameraView();
+    // getters
+    int getWindowWidth();
+    int getWindowLength();
+    sf::RenderWindow& getWindow() { return _window; }
 
-  // setters
-  void setCamera(int width, int height);
-  void setFontSize(int size);
+    sf::View getCameraView();
 
-private:
-  sf::RenderWindow& _window;
-  TextDoc& _doc;
-  EditorEvents& _events;
-  sf::View _camera;
+    // setters
+    void setCamera(int width, int height);
+    void setFontSize(int size);
+    void setViewToCamera();
 
-  void _drawStrings(TextDoc& doc);
-  void _drawTextCursor(sf::RenderWindow& window, TextCursor textCursor);
+  private:
+    sf::RenderWindow& _window;
+    TextDoc& _doc;
+    EditorEvents& _events;
+    sf::View _camera;
 
-  sf::Font _font;
-  int _fontSize;
+    void _drawStrings(TextDoc& doc);
+    void _drawTextCursor(sf::RenderWindow& window, TextCursor textCursor);
 
-  int _windowWidth;
-  int _windowLength;
+    sf::Font _font;
+    int _fontSize;
 
-  float _deltaScroll;
-  float _deltaZoomIn;
-  float _deltaZoomOut;
+    int _windowWidth;
+    int _windowLength;
 
-  int _marginOffset_x;
+    float _deltaScroll;
+    float _deltaZoomIn;
+    float _deltaZoomOut;
 
-  sf::Color _colorMargin;
-  sf::Color _charColor;
+    int _marginOffset_x;
 
-  float _bottomPixelLimit;
-  float _rightPixelLimit;
+    sf::Color _colorMargin;
+    sf::Color _charColor;
 
-  int _lineHeight; // is used to increase bottom and upper limit so scroll will
-  int _charWidth;  // work.
+    float _bottomPixelLimit;
+    float _rightPixelLimit;
+
+    int _lineHeight;  // is used to increase bottom and upper limit so scroll will
+    int _charWidth;   // work.
 };
