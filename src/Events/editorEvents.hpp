@@ -10,6 +10,8 @@ class EditorEvents {
     EditorEvents(TextDoc& doc, TextCursor cursor)
         : _doc(doc), _cursor(cursor){};  // TODO add selection to constructor
 
+    bool mouseWheelEvent(sf::Event);
+
   private:
     TextDoc& _doc;
     TextCursor _cursor;

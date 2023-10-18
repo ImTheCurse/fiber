@@ -9,7 +9,7 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-include_directories(src/Graphics , src/textDocument)
+include_directories(src/Graphics , src/textDocument,src/Handlers, src/Events)
 add_executable(fiber 
 src/main.cpp
 src/textDocument/doc.cpp
@@ -22,6 +22,9 @@ src/TextCursor/TextCursor.cpp
 src/TextCursor/TextCursor.hpp
 src/Handlers/EventHandler.cpp
 src/Handlers/EventHandler.hpp
+src/Events/Selection.cpp
+src/Events/Selection.hpp
+
 )
 target_link_libraries(fiber PRIVATE sfml-graphics)
 target_compile_features(fiber PRIVATE cxx_std_17)
