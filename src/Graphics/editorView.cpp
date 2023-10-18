@@ -141,7 +141,7 @@ void EditorView::_drawStrings(TextDoc& doc) {
     }
 }
 
-void EditorView::_drawTextCursor(sf::RenderWindow& window, TextCursor textCursor) {
+void EditorView::drawTextCursor(TextCursor textCursor) {
     int curr_x_pos = textCursor.getCurrentPos().first * _charWidth;
     //(textCursor.getCurrentPos().second * _fontSize) is the offset for spacing
     // between lines.
@@ -153,5 +153,8 @@ void EditorView::_drawTextCursor(sf::RenderWindow& window, TextCursor textCursor
     sf::RectangleShape cursorShape(rec);
     cursorShape.setPosition(curr_x_pos, curr_y_pos);
     cursorShape.setFillColor(sf::Color::White);
-    window.draw(cursorShape);
+    _window.draw(cursorShape);
 }
+
+int EditorView::getFontSize() { return _fontSize; }
+int EditorView::getCharWidth() { return _charWidth; }

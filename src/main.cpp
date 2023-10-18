@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "../../src/Events/Selection.hpp"
 #include "../../src/Events/editorEvents.hpp"
 #include "../../src/Graphics/editorView.hpp"
 #include "../../src/textDocument/doc.hpp"
@@ -16,7 +17,8 @@ int main() {
 
     EditorEvents event(doc, TextCursor);
     EditorView editorView(window, event, doc);
-    EventHandler handler(editorView, TextCursor);
+    Selection select(window, doc, editorView.getFontSize(), editorView.getCharWidth());
+    EventHandler handler(editorView, TextCursor, select);
     // run the program as long as the window is open
     while (window.isOpen()) {
         // check all the window's events that were triggered since the last

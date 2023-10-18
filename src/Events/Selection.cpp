@@ -8,10 +8,12 @@ Selection::Selection(sf::RenderWindow &window, TextDoc &doc, int fontSize, int c
 }
 
 void Selection::createSelection(int startLine, int startCharIndex, int endLine, int endCharIndex) {
+    // checking that selection is in the bounds of the text;
     if (startLine < 1 || startCharIndex < 0 || endLine > _doc.getLineCount() ||
         endCharIndex + 1 > _doc.getCharInLineAmount(endLine)) {
         return;
     }
+    _isSelectionExist = true;
 
     _startLine = startLine;
     _startCharIndex = startCharIndex;
@@ -27,4 +29,9 @@ void Selection::createSelection(int startLine, int startCharIndex, int endLine, 
     selectionShape.setPosition(sf::Vector2f(startCharIndex * _charWidth, startLine * _fontSize));
 
     _window.draw(selectionShape);
+}
+
+void Selection::removeSelection() {
+    sf::RectangleShape removedShape(sf::Vector2f(0, 0));
+    _selShape = removedShape;
 }

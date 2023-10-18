@@ -19,6 +19,8 @@ class EditorView {
     // getters
     int getWindowWidth();
     int getWindowLength();
+    int getFontSize();
+    int getCharWidth();
     sf::RenderWindow& getWindow() { return _window; }
 
     sf::View getCameraView();
@@ -27,6 +29,7 @@ class EditorView {
     void setCamera(int width, int height);
     void setFontSize(int size);
     void setViewToCamera();
+    void drawTextCursor(TextCursor textCursor);
 
   private:
     sf::RenderWindow& _window;
@@ -35,7 +38,6 @@ class EditorView {
     sf::View _camera;
 
     void _drawStrings(TextDoc& doc);
-    void _drawTextCursor(sf::RenderWindow& window, TextCursor textCursor);
 
     sf::Font _font;
     int _fontSize;
