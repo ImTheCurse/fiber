@@ -40,8 +40,10 @@ int main() {
         editorView.drawTextCursor(textCursor);
 
         if (handler.getSelection().isSelection()) {
-            window.draw(handler.getSelection().getSelectedShape());
-                }
+            for (auto itr : handler.getSelection().getSelections()) {
+                window.draw(itr);
+            }
+        }
 
         editorView.drawWindow(window);
         // end the current frame

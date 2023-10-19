@@ -13,9 +13,11 @@ class Selection {
     void saveDataToSelectionBuffer();
 
     sf::RectangleShape getSelectedShape() const;
+    std::vector<sf::RectangleShape> getSelections() const;
     bool isSelection() const;
 
   private:
+    std::vector<sf::RectangleShape> _selections;
     sf::RenderWindow &_window;
     TextDoc &_doc;
 
