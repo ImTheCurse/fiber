@@ -33,7 +33,6 @@ void EventHandler::handleMouseEvents(sf::RenderWindow& window, sf::Event& event)
             sf::Vector2i currentViewCord;
 
             // cordinates are relative to current view.
-            std::cout << "Window_y: " << _view.getWindow().getPosition().y << std::endl;
             sf::Vector2f currentCord;
 
             currentViewCord.x = event.mouseButton.x;
@@ -41,44 +40,38 @@ void EventHandler::handleMouseEvents(sf::RenderWindow& window, sf::Event& event)
 
             currentCord = window.mapPixelToCoords(currentViewCord);
 
-            std::cout << "x: " << currentCord.x << "y: " << currentCord.y << std::endl;
             // order in pair: first is character, second is line
             std::pair<int, int> currentCharLine =
-                mapPixelsToLineChar(currentCord.x, currentCord.y);
+                mapPixelsToLineChar(currentCord.x, currentCord.y, 4);
 
-            std::cout << "char: " << currentCharLine.first << "line: " << currentCharLine.second
-                      << std::endl;
+            _currentCharLine = currentCharLine;
 
             _cursor.setCursorPos(currentCharLine.second, currentCharLine.first);
             _view.drawTextCursor(_cursor);
 
-            /*
-            sf::Vector2i lastCord = currentCord;
-            if (event.type == sf::Event::MouseButtonReleased) {
-                _isMousePressed = false;
-                lastCord = sf::Mouse::getPosition();
-
-                ///////////////////////////////////////////////////////////////////////////////
-                std::pair<int, int> lastCharLine = mapPixelsToLineChar(lastCord.x, lastCord.y);
-
-                _select.createSelection(currentCharLine.second, currentCharLine.first,
-                                        lastCharLine.second, lastCharLine.first);
-
-                _cursor.setCursorPos(lastCharLine.second, lastCharLine.first);
-                std::cout << "lastChar: " << lastCharLine.first
-                          << "lastLine: " << lastCharLine.second << std::endl;
-                _view.drawTextCursor(_cursor);
-
-            }
-            */
+            /////////////////////////////////////////////////////////////////////////////
         }
+    }
+
+    sf::Vector2f lastCord = _currentWorldCord;
+    sf::Vector2i tempCord;
+
+    if (event.type == sf::Event::MouseButtonReleased) {
+        tempCord = sf::Mouse::getPosition(window);
+        lastCord = window.mapPixelToCoords(tempCord);
+
+        // TODO - values inserted to created selection are wrong - lastCharLine
+        std::pair<int, int> lastCharLine = mapPixelsToLineChar(lastCord.x, lastCord.y, 0);
+
+        _select.createSelection(_currentCharLine.second, _currentCharLine.first,
+                                lastCharLine.second, lastCharLine.first);
     }
 }
 
-//
-std::pair<int, int> EventHandler::mapPixelsToLineChar(int x, int y) {
+Selection& EventHandler::getSelection() const { return _select; }
+
+std::pair<int, int> EventHandler::mapPixelsToLineChar(int x, int y, int initial_offset_x) {
     std::pair<int, int> lineChar;
-    int initial_offset_x = 4;
     lineChar.first = x / _view.getCharWidth() - initial_offset_x;  // character
     lineChar.second = y / _view.getFontSize() + 1;                 // line
 

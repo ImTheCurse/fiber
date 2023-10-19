@@ -11,7 +11,9 @@ class Selection {
     void removeSelection();
     void saveDataToDocBuffer();
     void saveDataToSelectionBuffer();
-    bool _isSelectionExist;
+
+    sf::RectangleShape getSelectedShape() const;
+    bool isSelection() const;
 
   private:
     sf::RenderWindow &_window;
@@ -24,6 +26,7 @@ class Selection {
 
     int _charWidth;
     int _fontSize;
+    bool _isSelectionExist;
 
     std::string _selectionData;
     sf::RectangleShape _selShape;

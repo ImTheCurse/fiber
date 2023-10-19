@@ -38,6 +38,11 @@ int main() {
         window.clear(backgroundColor);
         handler.handleMouseEvents(window, event);
         editorView.drawTextCursor(textCursor);
+
+        if (handler.getSelection().isSelection()) {
+            window.draw(handler.getSelection().getSelectedShape());
+                }
+
         editorView.drawWindow(window);
         // end the current frame
         window.display();
