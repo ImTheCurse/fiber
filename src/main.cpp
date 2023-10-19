@@ -10,15 +10,15 @@
 
 int main() {
     TextDoc doc("test.txt");
-    TextCursor TextCursor(doc);
+    TextCursor textCursor(doc);
     sf::Color backgroundColor = sf::Color(21, 29, 45);
     sf::RenderWindow window(sf::VideoMode(800, 600), "Fiber");
     window.setVerticalSyncEnabled(true);
 
-    EditorEvents event(doc, TextCursor);
+    EditorEvents event(doc, textCursor);
     EditorView editorView(window, event, doc);
     Selection select(window, doc, editorView.getFontSize(), editorView.getCharWidth());
-    EventHandler handler(editorView, TextCursor, select);
+    EventHandler handler(editorView, textCursor, select);
     // run the program as long as the window is open
     while (window.isOpen()) {
         // check all the window's events that were triggered since the last
@@ -37,6 +37,7 @@ int main() {
         // clear the window with black color
         window.clear(backgroundColor);
         handler.handleMouseEvents(window, event);
+        editorView.drawTextCursor(textCursor);
         editorView.drawWindow(window);
         // end the current frame
         window.display();

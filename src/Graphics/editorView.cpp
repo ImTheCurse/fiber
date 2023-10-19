@@ -121,7 +121,7 @@ void EditorView::_drawStrings(TextDoc& doc) {
 
     int numOfLines = doc.getLineCount();
     // initial text start offset.
-    cord.x = 100;
+    cord.x = _marginOffset_x;
     cord.y = 0;
 
     for (int i = 0; i < numOfLines; i++) {
@@ -142,7 +142,7 @@ void EditorView::_drawStrings(TextDoc& doc) {
 }
 
 void EditorView::drawTextCursor(TextCursor textCursor) {
-    int curr_x_pos = textCursor.getCurrentPos().first * _charWidth;
+    int curr_x_pos = (textCursor.getCurrentPos().first * _charWidth) + _marginOffset_x;
     //(textCursor.getCurrentPos().second * _fontSize) is the offset for spacing
     // between lines.
     int curr_y_pos = textCursor.getCurrentPos().second * _lineHeight +
@@ -151,10 +151,12 @@ void EditorView::drawTextCursor(TextCursor textCursor) {
 
     sf::Vector2f rec(cursorDrawWidth, _lineHeight);
     sf::RectangleShape cursorShape(rec);
-    cursorShape.setPosition(curr_x_pos, curr_y_pos);
+    cursorShape.setPosition(curr_x_pos, (curr_y_pos / 2) - _fontSize);
     cursorShape.setFillColor(sf::Color::White);
     _window.draw(cursorShape);
 }
 
 int EditorView::getFontSize() { return _fontSize; }
 int EditorView::getCharWidth() { return _charWidth; }
+
+TextDoc& EditorView::getDoc() { return _doc; }

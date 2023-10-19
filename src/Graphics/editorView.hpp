@@ -17,6 +17,7 @@ class EditorView {
     void scrollTo(float x, float y);
 
     // getters
+    TextDoc& getDoc();
     int getWindowWidth();
     int getWindowLength();
     int getFontSize();
