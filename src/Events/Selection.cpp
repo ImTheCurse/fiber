@@ -29,7 +29,7 @@ void Selection::createSelection(int startLine, int startCharIndex, int endLine, 
     // float y_length = (endLine - startLine + 1) * _fontSize;
 
     for (int i = startLine; i <= endLine; i++) {
-        int x_length = _doc.getLine(i).length() * _charWidth;
+        int x_length = _doc.getLine(i).length() * (_charWidth + 2.5);
         int y_length = _fontSize;
 
         // if only one line is selected
@@ -47,8 +47,8 @@ void Selection::createSelection(int startLine, int startCharIndex, int endLine, 
         // TODO - fix all multiple lines - going to the end, except last line
         //  if there is multiple lines and we are on the first line.
         if (i == startLine) {
-            sf::RectangleShape selectionShape(
-                sf::Vector2f((_doc.getLine(i).length() - startCharIndex) * _charWidth, y_length));
+            sf::RectangleShape selectionShape(sf::Vector2f(
+                (_doc.getLine(i).length() - startCharIndex) * (_charWidth + 2.5), y_length));
             selectionShape.setFillColor(sf::Color(175, 89, 194));
             selectionShape.setPosition(
                 sf::Vector2f(startCharIndex * _charWidth, (i * _fontSize) - _fontSize));
