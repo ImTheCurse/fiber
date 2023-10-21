@@ -2,6 +2,8 @@
 ![Logo](https://github.com/ImTheCurse/fiber/assets/33231841/8ccb56a1-a53a-4a14-bb79-71789d4e4c96)
 
 # Fiber
+![Build](https://github.com/ImTheCurse/fiber/actions/workflows/ci.yml/badge.svg) [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) 
+
 Fiber is a lightwight, fast text editor built using c++ and SFML, used as a learning experiance for 2d rendering and backend.
 
 
@@ -33,11 +35,9 @@ It's easy sometimes to use the latest framework on the market, but I atleast get
 I do, building software on a real product challenges you to a great extent, finding solutions and solving bugs.
 
 
-## Badges
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
-![Build](https://github.com/ImTheCurse/fiber/actions/workflows/ci.yml/badge.svg)
+
 ## Authors
 
 - [@ImTheCurse](https://www.github.com/ImTheCurse)
@@ -49,11 +49,11 @@ I do, building software on a real product challenges you to a great extent, find
 
 
 ## Installation - TODO
-
-Install my-project with npm
+Make sure you install CMAKE before runing the build commands,
+Requires CMAKE 3.16
 
 ```bash
-  npm install my-project
-  cd my-project
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
 ```
     
