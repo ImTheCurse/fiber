@@ -10,7 +10,8 @@ class Selection {
     void createSelection(int startLine, int startCharIndex, int endLine, int endCharIndex);
     void removeSelection();
     void saveDataToDocBuffer();
-    void saveDataToSelectionBuffer();
+    void saveDataToSelectionBuffer(int startLine, int startCharIndex, int endLine,
+                                   int endCharIndex);
 
     sf::RectangleShape getSelectedShape() const;
     std::vector<sf::RectangleShape> getSelections() const;

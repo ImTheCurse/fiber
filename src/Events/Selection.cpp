@@ -17,16 +17,11 @@ void Selection::createSelection(int startLine, int startCharIndex, int endLine, 
     //  return;
     //}
 
-    // TODO - draw it line by line.
     _isSelectionExist = true;
     _startLine = startLine;
     _startCharIndex = startCharIndex;
     _endLine = endLine;
     _endCharIndex = endCharIndex;
-
-    int x_offset = 4;
-    // float x_length = _charWidth * (endCharIndex - startCharIndex);
-    // float y_length = (endLine - startLine + 1) * _fontSize;
 
     for (int i = startLine; i <= endLine; i++) {
         int x_length = _doc.getLine(i).length() * (_charWidth + 2.5);
@@ -44,8 +39,6 @@ void Selection::createSelection(int startLine, int startCharIndex, int endLine, 
             break;
         }
 
-        // TODO - fix all multiple lines - going to the end, except last line
-        //  if there is multiple lines and we are on the first line.
         if (i == startLine) {
             sf::RectangleShape selectionShape(sf::Vector2f(
                 (_doc.getLine(i).length() - startCharIndex) * (_charWidth + 2.5), y_length));
@@ -64,7 +57,6 @@ void Selection::createSelection(int startLine, int startCharIndex, int endLine, 
             _window.draw(selectionShape);
             _selections.push_back(selectionShape);
 
-            //////////////////////this is working as excpected////////////////////////////
             // if we are on the final line and multiple lines are selected.
         } else {
             sf::RectangleShape selectionShape(sf::Vector2f(endCharIndex * _charWidth, y_length));
@@ -77,6 +69,36 @@ void Selection::createSelection(int startLine, int startCharIndex, int endLine, 
 }
 
 void Selection::removeSelection() { _selections.clear(); }
+
+// TODO - create a fuction that will acuretly get each character size and convert it to pixel, and
+// compare it to the position of the screen, also change parameters in saveDataSelectionToBuffer().
+void Selection::saveDataToSelectionBuffer(int startLine, int startCharIndex, int endLine,
+                                          int endCharIndex) {
+    _selectionData.clear();
+    std::string newString;
+    for (int i = startLine; i <= endLine; i++) {
+        // if only one line is selected
+        if (startLine == endLine) {
+            newString = _doc.getLine(i).substr(startCharIndex, (endCharIndex - startCharIndex));
+            _selectionData = newString;
+            break;
+        }
+        // first line of a multiple line selection.
+        if (i == startLine) {
+            newString = _doc.getLine(i);
+
+            // multiple line, not at end and not at start.
+        } else if (i != endLine) {
+            newString += _doc.getLine(i);
+
+            // if we are on the final line and multiple lines are selected.
+        } else {
+            newString += _doc.getLine(i).substr(0, endCharIndex);
+            _selectionData = newString;
+        }
+    }
+    std::cout << _selectionData << std::endl;
+}
 
 sf::RectangleShape Selection::getSelectedShape() const { return _selShape; }
 
