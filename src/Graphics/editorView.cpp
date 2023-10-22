@@ -142,7 +142,14 @@ void EditorView::_drawStrings(TextDoc& doc) {
 }
 
 void EditorView::drawTextCursor(TextCursor textCursor) {
-    int curr_x_pos = (textCursor.getCurrentPos().first * _charWidth) + _marginOffset_x;
+    sf::Text text;
+    sf::Font font;
+    font.loadFromFile("../../fonts/JetBrainsMono-Regular.ttf");
+    text.setFont(font);
+    text.setCharacterSize(_fontSize);
+    text.setString(_doc.getLine(textCursor.getCurrentPos().second));
+
+    int curr_x_pos = text.findCharacterPos(textCursor.getCurrentPos().first).x + _marginOffset_x;
     //(textCursor.getCurrentPos().second * _fontSize) is the offset for spacing
     // between lines.
     int curr_y_pos = textCursor.getCurrentPos().second * _lineHeight +

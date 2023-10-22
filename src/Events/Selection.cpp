@@ -1,6 +1,8 @@
 #include "Selection.hpp"
 
 #include <iostream>
+#define FONT_SIZE 18
+#define MARGIN_OFFSET_X 40
 
 Selection::Selection(sf::RenderWindow &window, TextDoc &doc, int fontSize, int charWidth)
     : _window(window), _doc(doc) {
@@ -10,41 +12,46 @@ Selection::Selection(sf::RenderWindow &window, TextDoc &doc, int fontSize, int c
 }
 
 void Selection::createSelection(int startLine, int startCharIndex, int endLine, int endCharIndex) {
-    // checking that selection is in the bounds of the text;
-
-    // if (startLine < 1 || startCharIndex < 0 || endLine > _doc.getLineCount() ||
-    //  endCharIndex + 1 > _doc.getCharInLineAmount(endLine)) {
-    //  return;
-    //}
-
     _isSelectionExist = true;
     _startLine = startLine;
     _startCharIndex = startCharIndex;
     _endLine = endLine;
     _endCharIndex = endCharIndex;
 
+    sf::Text text;
+    sf::Font font;
+    font.loadFromFile("../../fonts/JetBrainsMono-Regular.ttf");
+    text.setFont(font);
+    text.setCharacterSize(FONT_SIZE);
+
     for (int i = startLine; i <= endLine; i++) {
-        int x_length = _doc.getLine(i).length() * (_charWidth + 2.5);
+        text.setString(_doc.getLine(i));
+
+        // x and y cordinates of a bounding box of a full line.
+        int x_length = text.findCharacterPos(_doc.getLine(i).length() - 1).x;
         int y_length = _fontSize;
 
         // if only one line is selected
         if (startLine == endLine) {
-            sf::RectangleShape selectionShape(
-                sf::Vector2f((endCharIndex - startCharIndex) * _charWidth, y_length));
+            sf::RectangleShape selectionShape(sf::Vector2f(
+                text.findCharacterPos(endCharIndex).x - text.findCharacterPos(startCharIndex).x,
+                y_length));
             selectionShape.setFillColor(sf::Color(175, 89, 194));
             selectionShape.setPosition(
-                sf::Vector2f(startCharIndex * _charWidth, (startLine * _fontSize) - _fontSize));
+                sf::Vector2f(text.findCharacterPos(startCharIndex).x + MARGIN_OFFSET_X,
+                             (startLine * _fontSize) - _fontSize));
             _window.draw(selectionShape);
             _selections.push_back(selectionShape);
             break;
         }
-
+        // first line of a multiple line selection.
         if (i == startLine) {
-            sf::RectangleShape selectionShape(sf::Vector2f(
-                (_doc.getLine(i).length() - startCharIndex) * (_charWidth + 2.5), y_length));
+            sf::RectangleShape selectionShape(
+                sf::Vector2f(x_length - text.findCharacterPos(startCharIndex).x, y_length));
             selectionShape.setFillColor(sf::Color(175, 89, 194));
             selectionShape.setPosition(
-                sf::Vector2f(startCharIndex * _charWidth, (i * _fontSize) - _fontSize));
+                sf::Vector2f(text.findCharacterPos(startCharIndex).x + MARGIN_OFFSET_X,
+                             (i * _fontSize) - _fontSize));
             _window.draw(selectionShape);
             _selections.push_back(selectionShape);
             continue;
@@ -53,25 +60,26 @@ void Selection::createSelection(int startLine, int startCharIndex, int endLine, 
         } else if (i != endLine) {
             sf::RectangleShape selectionShape(sf::Vector2f(x_length, y_length));
             selectionShape.setFillColor(sf::Color(175, 89, 194));
-            selectionShape.setPosition(sf::Vector2f(0, (i * _fontSize) - _fontSize));
+            selectionShape.setPosition(sf::Vector2f(MARGIN_OFFSET_X, (i * _fontSize) - _fontSize));
             _window.draw(selectionShape);
             _selections.push_back(selectionShape);
 
             // if we are on the final line and multiple lines are selected.
         } else {
-            sf::RectangleShape selectionShape(sf::Vector2f(endCharIndex * _charWidth, y_length));
+            sf::RectangleShape selectionShape(
+                sf::Vector2f(text.findCharacterPos(endCharIndex).x, y_length));
             selectionShape.setFillColor(sf::Color(175, 89, 194));
-            selectionShape.setPosition(sf::Vector2f(0, (i * _fontSize) - _fontSize));
+            selectionShape.setPosition(sf::Vector2f(MARGIN_OFFSET_X, (i * _fontSize) - _fontSize));
             _window.draw(selectionShape);
             _selections.push_back(selectionShape);
         }
     }
+    saveDataToSelectionBuffer(startLine, startCharIndex, endLine, endCharIndex);
+    std::cout << _selectionData << std::endl;
 }
 
 void Selection::removeSelection() { _selections.clear(); }
 
-// TODO - create a fuction that will acuretly get each character size and convert it to pixel, and
-// compare it to the position of the screen, also change parameters in saveDataSelectionToBuffer().
 void Selection::saveDataToSelectionBuffer(int startLine, int startCharIndex, int endLine,
                                           int endCharIndex) {
     _selectionData.clear();
@@ -85,7 +93,8 @@ void Selection::saveDataToSelectionBuffer(int startLine, int startCharIndex, int
         }
         // first line of a multiple line selection.
         if (i == startLine) {
-            newString = _doc.getLine(i);
+            newString =
+                _doc.getLine(i).substr(startCharIndex, _doc.getLine(i).length() - startCharIndex);
 
             // multiple line, not at end and not at start.
         } else if (i != endLine) {

@@ -1,5 +1,5 @@
 #include "EventHandler.hpp"
-
+#define MARGIN_X_OFFSET 40
 EventHandler::EventHandler(EditorView& editorView, TextCursor& textCursor, Selection& select)
     : _view(editorView), _cursor(textCursor), _select(select) {}
 
@@ -60,7 +60,6 @@ void EventHandler::handleMouseEvents(sf::RenderWindow& window, sf::Event& event)
         tempCord = sf::Mouse::getPosition(window);
         lastCord = window.mapPixelToCoords(tempCord);
 
-        // TODO - values inserted to created selection are wrong - lastCharLine
         std::pair<int, int> lastCharLine = mapPixelsToLineChar(lastCord.x, lastCord.y, 0);
 
         _select.createSelection(_currentCharLine.second, _currentCharLine.first,
@@ -71,9 +70,22 @@ void EventHandler::handleMouseEvents(sf::RenderWindow& window, sf::Event& event)
 Selection& EventHandler::getSelection() const { return _select; }
 
 std::pair<int, int> EventHandler::mapPixelsToLineChar(int x, int y, int initial_offset_x) {
+    sf::Text text;
+    sf::Font font;
+    font.loadFromFile("../../fonts/JetBrainsMono-Regular.ttf");
+    text.setFont(font);
+    text.setCharacterSize(_view.getFontSize());
+
     std::pair<int, int> lineChar;
-    lineChar.first = x / _view.getCharWidth() - initial_offset_x;  // character
-    lineChar.second = y / _view.getFontSize() + 1;                 // line
+    lineChar.second = y / _view.getFontSize() + 1;  // line
+
+    int i = _view.getDoc().getLine(lineChar.second).length();
+    text.setString(_view.getDoc().getLine(lineChar.second));
+    while (text.findCharacterPos(i - 1).x > x - MARGIN_X_OFFSET) {
+        i--;
+    }
+
+    lineChar.first = i;  // character
 
     return lineChar;
 }
