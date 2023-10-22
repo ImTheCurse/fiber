@@ -4,7 +4,7 @@
 # Fiber
 ![Build](https://github.com/ImTheCurse/fiber/actions/workflows/ci.yml/badge.svg) [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) 
 
-Fiber is a lightwight, fast text editor built using c++ and SFML, used as a learning experiance for 2d rendering and backend.
+Fiber is a lightwight, fast text editor built using c++ and SFML, used as a learning experience for 2d rendering and backend.
 
 
 ## Tech Stack
