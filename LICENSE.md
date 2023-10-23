@@ -1,7 +1,3 @@
-# CMake SFML Project Licenses
-
-_This software is available under 2 licenses -- choose whichever you prefer._
-
 ## Public Domain
 
 This is free and unencumbered software released into the public domain.
