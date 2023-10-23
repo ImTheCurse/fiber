@@ -8,9 +8,10 @@ Fiber is a lightwight, fast text editor built using c++ and SFML, used as a lear
 
 
 ## Tech Stack
-
-- **C++** 
-- **SFML**
+<p float="left">
+    <img src="https://github.com/ImTheCurse/fiber/assets/33231841/e81813fa-0abe-43b6-b4b3-5eb3828150cb" width=14% height=14%>
+    <img src="https://github.com/ImTheCurse/fiber/assets/33231841/96b592fb-025f-4a64-a054-1a901fb015e5" width=50% height=50%>
+</p>
 
 
 ## Features
