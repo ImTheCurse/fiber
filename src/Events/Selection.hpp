@@ -9,13 +9,13 @@ class Selection {
     Selection(sf::RenderWindow &window, TextDoc &doc, int fontSize, int charWidth);
     void createSelection(int startLine, int startCharIndex, int endLine, int endCharIndex);
     void removeSelection();
-    void saveDataToDocBuffer();
-    void saveDataToSelectionBuffer(int startLine, int startCharIndex, int endLine,
-                                   int endCharIndex);
 
     sf::RectangleShape getSelectedShape() const;
     std::vector<sf::RectangleShape> getSelections() const;
     bool isSelection() const;
+    std::string getSelectionData() const;
+    std::pair<int, int> getStartCharLine() const;
+    std::pair<int, int> getEndCharLine() const;
 
   private:
     std::vector<sf::RectangleShape> _selections;
@@ -33,6 +33,6 @@ class Selection {
 
     std::string _selectionData;
     sf::RectangleShape _selShape;
-    void saveSelectionData();
-    int findLineAndCharIndex();
+    void saveDataToSelectionBuffer(int startLine, int startCharIndex, int endLine,
+                                   int endCharIndex);
 };

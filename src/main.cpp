@@ -36,7 +36,7 @@ int main() {
 
         // clear the window with black color
         window.clear(backgroundColor);
-        handler.handleMouseEvents(window, event);
+        handler.handleEvents(window, event);
         editorView.drawTextCursor(textCursor);
 
         if (handler.getSelection().isSelection()) {

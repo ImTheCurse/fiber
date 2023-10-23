@@ -3,7 +3,13 @@
 EventHandler::EventHandler(EditorView& editorView, TextCursor& textCursor, Selection& select)
     : _view(editorView), _cursor(textCursor), _select(select) {}
 
-void EventHandler::handleEvents(sf::RenderWindow& window, sf::Event& event) {}
+void EventHandler::handleEvents(sf::RenderWindow& window, sf::Event& event) {
+    if (event.type == sf::Event::MouseButtonPressed ||
+        event.type == sf::Event::MouseWheelScrolled ||
+        event.type == sf::Event::MouseButtonReleased) {
+        handleMouseEvents(window, event);
+    }
+}
 
 void EventHandler::handleMouseEvents(sf::RenderWindow& window, sf::Event& event) {
     // Mouse scroll event
@@ -42,7 +48,7 @@ void EventHandler::handleMouseEvents(sf::RenderWindow& window, sf::Event& event)
 
             // order in pair: first is character, second is line
             std::pair<int, int> currentCharLine =
-                mapPixelsToLineChar(currentCord.x, currentCord.y, 4);
+                mapPixelsToLineChar(currentCord.x, currentCord.y);
 
             _currentCharLine = currentCharLine;
 
@@ -60,16 +66,18 @@ void EventHandler::handleMouseEvents(sf::RenderWindow& window, sf::Event& event)
         tempCord = sf::Mouse::getPosition(window);
         lastCord = window.mapPixelToCoords(tempCord);
 
-        std::pair<int, int> lastCharLine = mapPixelsToLineChar(lastCord.x, lastCord.y, 0);
+        std::pair<int, int> lastCharLine = mapPixelsToLineChar(lastCord.x, lastCord.y);
 
         _select.createSelection(_currentCharLine.second, _currentCharLine.first,
                                 lastCharLine.second, lastCharLine.first);
     }
 }
 
+void EventHandler::handleKeyPressedEvents(sf::Event& event) {}
+
 Selection& EventHandler::getSelection() const { return _select; }
 
-std::pair<int, int> EventHandler::mapPixelsToLineChar(int x, int y, int initial_offset_x) {
+std::pair<int, int> EventHandler::mapPixelsToLineChar(int x, int y) {
     sf::Text text;
     sf::Font font;
     font.loadFromFile("../../fonts/JetBrainsMono-Regular.ttf");

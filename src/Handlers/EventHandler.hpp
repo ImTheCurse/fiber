@@ -11,7 +11,6 @@ class EventHandler {
     EventHandler(EditorView& editorView, TextCursor& textCursor, Selection& select);
 
     void handleEvents(sf::RenderWindow& window, sf::Event& event);
-    void handleMouseEvents(sf::RenderWindow& window, sf::Event& event);
 
     Selection& getSelection() const;
 
@@ -20,11 +19,14 @@ class EventHandler {
     TextCursor& _cursor;
     Selection& _select;
 
+    std::string _buffer;
+
     sf::Vector2f _currentWorldCord;
     std::pair<int, int> _currentCharLine;
 
-    std::pair<int, int> mapPixelsToLineChar(int x, int y, int initial_offset_x);
-    // void handleKeyPressedEvents(EditorView& view, sf::Event& event);
+    std::pair<int, int> mapPixelsToLineChar(int x, int y);
+    void handleMouseEvents(sf::RenderWindow& window, sf::Event& event);
+    void handleKeyPressedEvents(sf::Event& event);
     // void handleKeyReleasedEvents(sf::Event& event);
     // void handleTextEnteredEvent(sf::Event& event);
 

@@ -75,10 +75,19 @@ void Selection::createSelection(int startLine, int startCharIndex, int endLine, 
         }
     }
     saveDataToSelectionBuffer(startLine, startCharIndex, endLine, endCharIndex);
-    std::cout << _selectionData << std::endl;
 }
 
 void Selection::removeSelection() { _selections.clear(); }
+
+std::string Selection::getSelectionData() const { return _selectionData; }
+
+std::pair<int, int> Selection::getStartCharLine() const {
+    return std::make_pair(_startCharIndex, _startLine);
+}
+
+std::pair<int, int> Selection::getEndCharLine() const {
+    return std::make_pair(_endCharIndex, _endLine);
+}
 
 void Selection::saveDataToSelectionBuffer(int startLine, int startCharIndex, int endLine,
                                           int endCharIndex) {
@@ -106,7 +115,6 @@ void Selection::saveDataToSelectionBuffer(int startLine, int startCharIndex, int
             _selectionData = newString;
         }
     }
-    std::cout << _selectionData << std::endl;
 }
 
 sf::RectangleShape Selection::getSelectedShape() const { return _selShape; }
