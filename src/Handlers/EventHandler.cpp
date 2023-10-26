@@ -4,6 +4,11 @@ EventHandler::EventHandler(EditorView& editorView, TextCursor& textCursor, Selec
     : _view(editorView), _cursor(textCursor), _select(select) {}
 
 void EventHandler::handleEvents(sf::RenderWindow& window, sf::Event& event) {
+    // handling constant keyPress "events"(not events, because events holds only a sinle value at a
+    // time)
+    handleKeyPressedEvents();
+
+    // handling mouse events
     if (event.type == sf::Event::MouseButtonPressed ||
         event.type == sf::Event::MouseWheelScrolled ||
         event.type == sf::Event::MouseButtonReleased) {
@@ -73,7 +78,22 @@ void EventHandler::handleMouseEvents(sf::RenderWindow& window, sf::Event& event)
     }
 }
 
-void EventHandler::handleKeyPressedEvents(sf::Event& event) {}
+void EventHandler::handleKeyPressedEvents() {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
+        sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+        // moving from selection buffer to EventBuffer.
+        _buffer.clear();
+        _buffer = _select.getSelectionData();
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
+        sf::Keyboard::isKeyPressed(sf::Keyboard::V)) {
+        std::pair<int, int> cursorPos = _cursor.getCurrentPos();
+        if (cursorPos.first <= _view.getDoc().getLine(cursorPos.second).length()) {
+            _view.getDoc().addTextToLine(cursorPos.second, cursorPos.first, _buffer);
+        }
+    }
+}
 
 Selection& EventHandler::getSelection() const { return _select; }
 

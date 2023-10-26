@@ -11,7 +11,7 @@ class EventHandler {
     EventHandler(EditorView& editorView, TextCursor& textCursor, Selection& select);
 
     void handleEvents(sf::RenderWindow& window, sf::Event& event);
-
+    void handleKeyPressedEvents();
     Selection& getSelection() const;
 
   private:
@@ -26,7 +26,7 @@ class EventHandler {
 
     std::pair<int, int> mapPixelsToLineChar(int x, int y);
     void handleMouseEvents(sf::RenderWindow& window, sf::Event& event);
-    void handleKeyPressedEvents(sf::Event& event);
+
     // void handleKeyReleasedEvents(sf::Event& event);
     // void handleTextEnteredEvent(sf::Event& event);
 
