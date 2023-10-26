@@ -2,7 +2,14 @@
 ![Logo](https://github.com/ImTheCurse/fiber/assets/33231841/8ccb56a1-a53a-4a14-bb79-71789d4e4c96)
 
 # Fiber
-![Build](https://github.com/ImTheCurse/fiber/actions/workflows/ci.yml/badge.svg) [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) 
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/imthecurse/fiber/ci.yml?style=for-the-badge&logo=instructure&logoColor=D9E0EE&labelColor=302D41)
+![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/imthecurse/fiber?style=for-the-badge&logo=starship&logoColor=D9E0EE&labelColor=302D41&color=8bd5ca)
+![GitHub](https://img.shields.io/github/license/imthecurse/fiber?style=for-the-badge&logo=Academia&logoColor=D9E0EE&labelColor=302D41&color=ee999f)
+
+
+
+
+ 
 
 Fiber is a lightwight, fast text editor built using c++ and SFML, used as a learning experience for 2d rendering and backend.
 
@@ -15,14 +22,13 @@ Fiber is a lightwight, fast text editor built using c++ and SFML, used as a lear
 
 
 ## Features
-
-- Switching between lines : in progress
-- Scrolling : complete
-- loading file from memory : complete
-- creating and saving file : in progress
-- Fullscreen mode :complete
-- light and dark mode : complete
-- Cross platform : in progress
+- Scrolling ✅ 
+- loading file from memory ✅
+- Fullscreen mode ✅ 
+- light and dark mode ✅
+- creating and saving file 🚧
+- cross platform 🚧
+- Switching between lines 🚧
 
 
 ## FAQ
@@ -49,7 +55,7 @@ I do, building software on a real product challenges you to a great extent, find
 [MIT](https://choosealicense.com/licenses/mit/)
 
 
-## Installation - TODO
+## Installation
 Make sure you install CMAKE before runing the build commands,
 Requires CMAKE 3.16
 
