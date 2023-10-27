@@ -1,4 +1,7 @@
 #include "EventHandler.hpp"
+
+#include <SFML/Window/Clipboard.hpp>
+
 #define MARGIN_X_OFFSET 40
 EventHandler::EventHandler(EditorView& editorView, TextCursor& textCursor, Selection& select)
     : _view(editorView), _cursor(textCursor), _select(select) {}
@@ -6,7 +9,8 @@ EventHandler::EventHandler(EditorView& editorView, TextCursor& textCursor, Selec
 void EventHandler::handleEvents(sf::RenderWindow& window, sf::Event& event) {
     // handling constant keyPress "events"(not events, because events holds only a sinle value at a
     // time)
-    handleKeyPressedEvents();
+
+    handleKeyPressedEvents(event);
 
     // handling mouse events
     if (event.type == sf::Event::MouseButtonPressed ||
@@ -78,20 +82,27 @@ void EventHandler::handleMouseEvents(sf::RenderWindow& window, sf::Event& event)
     }
 }
 
-void EventHandler::handleKeyPressedEvents() {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
-        sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-        // moving from selection buffer to EventBuffer.
-        _buffer.clear();
-        _buffer = _select.getSelectionData();
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
-        sf::Keyboard::isKeyPressed(sf::Keyboard::V)) {
-        std::pair<int, int> cursorPos = _cursor.getCurrentPos();
-        if (cursorPos.first <= _view.getDoc().getLine(cursorPos.second).length()) {
-            _view.getDoc().addTextToLine(cursorPos.second, cursorPos.first, _buffer);
+void EventHandler::handleKeyPressedEvents(sf::Event event) {
+    bool isCtrlPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) ||
+                         sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
+    if (isCtrlPressed) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+            // moving from selection buffer to EventBuffer.
+            _buffer.clear();
+            _buffer = _select.getSelectionData();
         }
+
+        else if (event.key.code == sf::Keyboard::V) {
+            pasteContent();
+        }
+    }
+}
+
+void EventHandler::pasteContent() {
+    std::pair<int, int> cursorPos = _cursor.getCurrentPos();
+    if (cursorPos.first <= _view.getDoc().getLine(cursorPos.second).length()) {
+        _view.getDoc().addTextToLine(cursorPos.second, cursorPos.first, _buffer);
+        _buffer.clear();
     }
 }
 

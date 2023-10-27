@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Window/Cursor.hpp>
 #include <iostream>
 
 #include "../../src/Events/Selection.hpp"
@@ -14,6 +15,11 @@ int main() {
     sf::Color backgroundColor = sf::Color(21, 29, 45);
     sf::RenderWindow window(sf::VideoMode(800, 600), "Fiber");
     window.setVerticalSyncEnabled(true);
+    window.setKeyRepeatEnabled(false);
+    sf::Cursor mouseCursor;
+
+    if (mouseCursor.loadFromSystem(sf::Cursor::Text))
+        window.setMouseCursor(mouseCursor);
 
     EditorEvents event(doc, textCursor);
     EditorView editorView(window, event, doc);
