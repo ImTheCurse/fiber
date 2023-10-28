@@ -124,6 +124,14 @@ void TextDoc::deleteTextFromLine(int lineNum, int charIndex, int lengthToDelete)
     _isChanged = true;
 }
 
+void TextDoc::deleteSelectionText(Selection &sel) {
+    int startIndex = getCharIndex(sel.getStartCharLine().second, sel.getStartCharLine().first);
+    int endIndex = getCharIndex(sel.getEndCharLine().second, sel.getEndCharLine().first);
+    deleteTextFromLine(sel.getStartCharLine().second, sel.getStartCharLine().first,
+                       endIndex - startIndex);
+    sel.removeSelection();
+}
+
 size_t TextDoc::getNthOccurrenceIdx(int lineCount) {
     size_t idx = 0;
     while (lineCount > 0 && idx < _buffer.length()) {

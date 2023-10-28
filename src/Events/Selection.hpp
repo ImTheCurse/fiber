@@ -3,7 +3,7 @@
 #include <string>
 
 #include "../textDocument/doc.hpp"
-
+class TextDoc;
 class Selection {
   public:
     Selection(sf::RenderWindow &window, TextDoc &doc, int fontSize, int charWidth);

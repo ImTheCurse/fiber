@@ -77,7 +77,11 @@ void Selection::createSelection(int startLine, int startCharIndex, int endLine, 
     saveDataToSelectionBuffer(startLine, startCharIndex, endLine, endCharIndex);
 }
 
-void Selection::removeSelection() { _selections.clear(); }
+void Selection::removeSelection() {
+    _isSelectionExist = false;
+    _selections.clear();
+    _selectionData.clear();
+}
 
 std::string Selection::getSelectionData() const { return _selectionData; }
 
@@ -121,4 +125,9 @@ sf::RectangleShape Selection::getSelectedShape() const { return _selShape; }
 
 std::vector<sf::RectangleShape> Selection::getSelections() const { return _selections; }
 
-bool Selection::isSelection() const { return _isSelectionExist; }
+bool Selection::isSelection() const {
+    if (_selectionData == "") {
+        return false;
+    }
+    return true;
+}

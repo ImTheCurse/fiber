@@ -96,6 +96,12 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
             pasteContent();
         }
     }
+
+    if (_select.isSelection() && event.type == sf::Event::KeyReleased &&
+        event.text.unicode == sf::Keyboard::Backspace) {
+        _view.getDoc().deleteSelectionText(_select);
+        _select.removeSelection();
+    }
 }
 
 void EventHandler::pasteContent() {

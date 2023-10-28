@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+#include "../Events/Selection.hpp"
+class Selection;
 class TextDoc {
   public:
     TextDoc(const std::string &filename);
@@ -17,6 +19,7 @@ class TextDoc {
     // crud operations
     void addTextToLine(int lineNum, int charIndex, std::string text);
     void deleteTextFromLine(int lineNum, int charIndex, int lengthToDelete);
+    void deleteSelectionText(Selection &sel);
 
   private:
     std::string _buffer;  // using sf::string for ease of conversion between
