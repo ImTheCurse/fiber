@@ -122,6 +122,16 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
         _cursor.setCursorPos(currentLine, currentCharIdx - 1);
     }
 
+    if (event.type == sf::Event::KeyReleased && event.text.unicode == sf::Keyboard::Space &&
+        _lastKeyPressed == 32 /*key press when space is pressed*/) {
+        if (_view.getDoc().getLine(_cursor.getCurrentLine()) == "\n") {
+            return;
+        }
+
+        _view.getDoc().addTextToLine(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx(), " ");
+        _cursor.setCursorPos(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx() + 1);
+    }
+
     _lastKeyPressed = event.text.unicode;
 }
 
