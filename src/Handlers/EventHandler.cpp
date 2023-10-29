@@ -85,6 +85,7 @@ void EventHandler::handleMouseEvents(sf::RenderWindow& window, sf::Event& event)
 void EventHandler::handleKeyPressedEvents(sf::Event event) {
     bool isCtrlPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) ||
                          sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
+
     if (isCtrlPressed) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
             // moving from selection buffer to EventBuffer.
@@ -102,6 +103,26 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
         _view.getDoc().deleteSelectionText(_select);
         _select.removeSelection();
     }
+
+    else if (event.type == sf::Event::KeyReleased &&
+             event.text.unicode == sf::Keyboard::Backspace &&
+             _lastKeyPressed == 8 /*key of backspace when pressing it*/) {
+        int currentLine = _cursor.getCurrentLine();
+        int currentCharIdx = _cursor.getCurrentCharIdx();
+
+        if (currentLine == 1 && currentCharIdx == 0)
+            return;
+
+        _view.getDoc().deleteTextFromLine(currentLine, currentCharIdx - 1, 1);
+
+        if (currentCharIdx == 0) {
+            currentLine--;
+            currentCharIdx = _view.getDoc().getLine(currentLine).length();
+        }
+        _cursor.setCursorPos(currentLine, currentCharIdx - 1);
+    }
+
+    _lastKeyPressed = event.text.unicode;
 }
 
 void EventHandler::pasteContent() {
