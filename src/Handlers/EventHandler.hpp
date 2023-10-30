@@ -33,5 +33,6 @@ class EventHandler {
     bool _isMousePressed;
     bool _shiftPressed;
     int _lastKeyPressed;
+    bool _wasLastKeyReleased;
     sf::String _stringCopied;
 };

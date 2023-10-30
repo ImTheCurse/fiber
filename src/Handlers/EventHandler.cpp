@@ -132,6 +132,31 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
         _cursor.setCursorPos(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx() + 1);
     }
 
+    if (event.type == sf::Event::KeyPressed && event.text.unicode == sf::Keyboard::Up &&
+        _wasLastKeyReleased) {
+        _cursor.setCursorPos(_cursor.getCurrentLine() - 1, _cursor.getCurrentCharIdx());
+    }
+
+    if (event.type == sf::Event::KeyPressed && event.text.unicode == sf::Keyboard::Down &&
+        _wasLastKeyReleased) {
+        _cursor.setCursorPos(_cursor.getCurrentLine() + 1, _cursor.getCurrentCharIdx());
+    }
+
+    if (event.type == sf::Event::KeyPressed && event.text.unicode == sf::Keyboard::Right &&
+        _wasLastKeyReleased) {
+        _cursor.setCursorPos(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx() + 1);
+    }
+
+    if (event.type == sf::Event::KeyPressed && event.text.unicode == sf::Keyboard::Left &&
+        _wasLastKeyReleased) {
+        _cursor.setCursorPos(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx() - 1);
+    }
+
+    if (event.type == sf::Event::KeyReleased) {
+        _wasLastKeyReleased = true;
+    } else {
+        _wasLastKeyReleased = false;
+    }
     _lastKeyPressed = event.text.unicode;
 }
 
