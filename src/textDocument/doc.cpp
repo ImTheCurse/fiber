@@ -109,6 +109,13 @@ void TextDoc::addTextToLine(int lineNum, int charIndex, std::string text) {
     _isChanged = true;
 }
 
+void TextDoc::addTextToLine(int lineNum, int charIndex, char c) {
+    int idx = getCharIndex(lineNum, charIndex);
+
+    _buffer.insert(idx, 1, c);
+    _isChanged = true;
+}
+
 size_t TextDoc::getCharIndex(int lineNum, int charIndex) {
     size_t idx = 0;
     idx += getNthOccurrenceIdx(lineNum - 1);

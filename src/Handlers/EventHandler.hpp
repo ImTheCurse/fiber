@@ -26,13 +26,15 @@ class EventHandler {
 
     std::pair<int, int> mapPixelsToLineChar(int x, int y);
     void handleMouseEvents(sf::RenderWindow& window, sf::Event& event);
+    void handleTextEnteredEvent(sf::Event& event);
     void pasteContent();
     // void handleKeyReleasedEvents(sf::Event& event);
-    // void handleTextEnteredEvent(sf::Event& event);
 
+    sf::Event::EventType _lastEvent;
     bool _isMousePressed;
     bool _shiftPressed;
     int _lastKeyPressed;
+    char _lastKey;
     bool _wasLastKeyReleased;
     sf::String _stringCopied;
 };

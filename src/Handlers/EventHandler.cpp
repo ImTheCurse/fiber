@@ -11,7 +11,7 @@ void EventHandler::handleEvents(sf::RenderWindow& window, sf::Event& event) {
     // time)
 
     handleKeyPressedEvents(event);
-
+    handleTextEnteredEvent(event);
     // handling mouse events
     if (event.type == sf::Event::MouseButtonPressed ||
         event.type == sf::Event::MouseWheelScrolled ||
@@ -121,15 +121,12 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
         }
         _cursor.setCursorPos(currentLine, currentCharIdx - 1);
     }
-
+    // prevents spacing on an empty line.
     if (event.type == sf::Event::KeyReleased && event.text.unicode == sf::Keyboard::Space &&
         _lastKeyPressed == 32 /*key press when space is pressed*/) {
         if (_view.getDoc().getLine(_cursor.getCurrentLine()) == "\n") {
             return;
         }
-
-        _view.getDoc().addTextToLine(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx(), " ");
-        _cursor.setCursorPos(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx() + 1);
     }
 
     if (event.type == sf::Event::KeyPressed && event.text.unicode == sf::Keyboard::Up &&
@@ -189,4 +186,25 @@ std::pair<int, int> EventHandler::mapPixelsToLineChar(int x, int y) {
     lineChar.first = i;  // character
 
     return lineChar;
+}
+
+void EventHandler::handleTextEnteredEvent(sf::Event& event) {
+    if (event.type == sf::Event::KeyReleased && _lastEvent == sf::Event::TextEntered) {
+        if (_lastKey == 8 /*backspace key*/ || _lastKey == 27)
+            return;
+        if (_lastKey == 13 /*Carridge return*/) {
+            _view.getDoc().addTextToLine(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx(),
+                                         '\n');
+            _cursor.setCursorPos(_cursor.getCurrentLine() + 1, 0);
+            _lastEvent = event.type;
+            _lastKey = static_cast<char>(event.text.unicode);
+            return;
+        }
+
+        _view.getDoc().addTextToLine(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx(),
+                                     _lastKey);
+        _cursor.setCursorPos(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx() + 1);
+    }
+    _lastEvent = event.type;
+    _lastKey = static_cast<char>(event.text.unicode);
 }

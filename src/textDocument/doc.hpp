@@ -18,6 +18,7 @@ class TextDoc {
     size_t getCharIndex(int lineNum, int charIndex);
     // crud operations
     void addTextToLine(int lineNum, int charIndex, std::string text);
+    void addTextToLine(int lineNum, int charIndex, char c);
     void deleteTextFromLine(int lineNum, int charIndex, int lengthToDelete);
     void deleteSelectionText(Selection &sel);
 
