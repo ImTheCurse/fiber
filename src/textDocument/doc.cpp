@@ -23,6 +23,7 @@ TextDoc::TextDoc(const std::string &filename) : _filename(filename) {
             myChar = file.get();
             _buffer += myChar;
         }
+        _buffer.erase(_buffer.length() - 1, 1);
     }
 
     file.close();

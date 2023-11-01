@@ -121,7 +121,7 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
             }
         }
 
-        if (currentCharIdx == 0) {
+        if (currentCharIdx <= 0) {
             currentLine--;
             currentCharIdx = _view.getDoc().getLine(currentLine).length();
         }
