@@ -38,8 +38,6 @@ bool TextDoc::saveFile() {
         return false;
     }
 
-    // writing to file
-    // TODO debug why there is an output of strange symbol at the end.
     fileToWrite << _buffer;
 
     fileToWrite.close();

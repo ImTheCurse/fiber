@@ -32,6 +32,7 @@ class EventHandler {
     // void handleKeyReleasedEvents(sf::Event& event);
 
     sf::Event::EventType _lastEvent;
+    bool wasFileSaved = false;
     bool _isMousePressed;
     bool _shiftPressed;
     int _lastKeyPressed;

@@ -96,6 +96,15 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
         else if (event.key.code == sf::Keyboard::V) {
             pasteContent();
         }
+
+        else if (event.key.code == sf::Keyboard::S && event.type == sf::Event::KeyReleased &&
+                 _lastEvent == sf::Event::TextEntered) {
+            if (_view.getDoc().saveFile()) {
+                std::cout << "Saved file successfuly!" << std::endl;
+                wasFileSaved = true;
+                return;
+            }
+        }
     }
 
     if (_select.isSelection() && event.type == sf::Event::KeyReleased &&
@@ -205,7 +214,8 @@ std::pair<int, int> EventHandler::mapPixelsToLineChar(int x, int y) {
 
 void EventHandler::handleTextEnteredEvent(sf::Event& event) {
     if (event.type == sf::Event::KeyReleased && _lastEvent == sf::Event::TextEntered) {
-        if (_lastKey == 8 /*backspace key*/ || _lastKey == 27)
+        if (_lastKey == 8 /*backspace key*/ || _lastKey == 27 ||
+            _lastKey == 19 /*key pressed after save*/)
             return;
         if (_lastKey == 13 /*Carridge return*/) {
             _view.getDoc().addTextToLine(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx(),
