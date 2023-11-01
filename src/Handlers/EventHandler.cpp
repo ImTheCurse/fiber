@@ -113,7 +113,13 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
         if (currentLine == 1 && currentCharIdx == 0)
             return;
 
-        _view.getDoc().deleteTextFromLine(currentLine, currentCharIdx - 1, 1);
+        if (isCursorPosValid(currentLine)) {
+            try {
+                _view.getDoc().deleteTextFromLine(currentLine, currentCharIdx - 1, 1);
+            } catch (const std::out_of_range& err) {
+                std::cout << "Exception was thrown: " << err.what() << std::endl;
+            }
+        }
 
         if (currentCharIdx == 0) {
             currentLine--;
