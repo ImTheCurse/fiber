@@ -28,6 +28,7 @@ class EventHandler {
     void handleMouseEvents(sf::RenderWindow& window, sf::Event& event);
     void handleTextEnteredEvent(sf::Event& event);
     void pasteContent();
+    bool isCursorPosValid(int line);
     // void handleKeyReleasedEvents(sf::Event& event);
 
     sf::Event::EventType _lastEvent;

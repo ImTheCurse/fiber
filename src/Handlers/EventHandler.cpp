@@ -131,12 +131,14 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
 
     if (event.type == sf::Event::KeyPressed && event.text.unicode == sf::Keyboard::Up &&
         _wasLastKeyReleased) {
-        _cursor.setCursorPos(_cursor.getCurrentLine() - 1, _cursor.getCurrentCharIdx());
+        if (isCursorPosValid(_cursor.getCurrentLine() - 1))
+            _cursor.setCursorPos(_cursor.getCurrentLine() - 1, _cursor.getCurrentCharIdx());
     }
 
     if (event.type == sf::Event::KeyPressed && event.text.unicode == sf::Keyboard::Down &&
         _wasLastKeyReleased) {
-        _cursor.setCursorPos(_cursor.getCurrentLine() + 1, _cursor.getCurrentCharIdx());
+        if (isCursorPosValid(_cursor.getCurrentLine() + 1))
+            _cursor.setCursorPos(_cursor.getCurrentLine() + 1, _cursor.getCurrentCharIdx());
     }
 
     if (event.type == sf::Event::KeyPressed && event.text.unicode == sf::Keyboard::Right &&
@@ -163,6 +165,13 @@ void EventHandler::pasteContent() {
         _view.getDoc().addTextToLine(cursorPos.second, cursorPos.first, _buffer);
         _buffer.clear();
     }
+}
+
+bool EventHandler::isCursorPosValid(int line) {
+    if (line > _view.getDoc().getLineCount() || line < 1) {
+        return false;
+    }
+    return true;
 }
 
 Selection& EventHandler::getSelection() const { return _select; }
