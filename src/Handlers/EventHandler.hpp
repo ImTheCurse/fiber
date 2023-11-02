@@ -1,4 +1,5 @@
 #pragma once
+#include <list>
 
 #include "../Events/Selection.hpp"
 #include "../Graphics/editorView.hpp"
@@ -6,7 +7,28 @@
 
 class EditorView;
 
-class EventHandler {
+enum class action { ADDED, REMOVED };
+
+struct Action {
+    action actionType;
+    int startLine;
+    int startChar;
+    int endLine;
+    int endChar;
+    std::string str;
+};
+
+class ActionList {
+  public:
+    void addToActionList(action actionName, const int startLine, const int startChar,
+                         std::string str);
+    Action popLastAction() const;
+
+  private:
+    std::list<Action> _lastActions;
+};
+
+class EventHandler : public ActionList {
   public:
     EventHandler(EditorView& editorView, TextCursor& textCursor, Selection& select);
 

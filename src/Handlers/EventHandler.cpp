@@ -107,12 +107,14 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
         }
     }
 
+    // deleting selctioned characters
     if (_select.isSelection() && event.type == sf::Event::KeyReleased &&
         event.text.unicode == sf::Keyboard::Backspace) {
         _view.getDoc().deleteSelectionText(_select);
         _select.removeSelection();
     }
 
+    // deleting a single char at cursor position
     else if (event.type == sf::Event::KeyReleased &&
              event.text.unicode == sf::Keyboard::Backspace &&
              _lastKeyPressed == 8 /*key of backspace when pressing it*/) {
@@ -190,6 +192,9 @@ bool EventHandler::isCursorPosValid(int line) {
 }
 
 Selection& EventHandler::getSelection() const { return _select; }
+
+void ActionList::addToActionList(action actionName, const int startLine, const int startChar,
+                                 std::string str) {}
 
 std::pair<int, int> EventHandler::mapPixelsToLineChar(int x, int y) {
     sf::Text text;
