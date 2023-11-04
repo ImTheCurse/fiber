@@ -2,6 +2,8 @@
 
 #include <SFML/Window/Clipboard.hpp>
 
+#include "../util.hpp"
+
 #define MARGIN_X_OFFSET 40
 EventHandler::EventHandler(EditorView& editorView, TextCursor& textCursor, Selection& select)
     : _view(editorView), _cursor(textCursor), _select(select) {}
@@ -9,7 +11,7 @@ EventHandler::EventHandler(EditorView& editorView, TextCursor& textCursor, Selec
 void EventHandler::handleEvents(sf::RenderWindow& window, sf::Event& event) {
     // handling constant keyPress "events"(not events, because events holds only a sinle value at a
     // time)
-
+    ActionList _actionList;
     handleKeyPressedEvents(event);
     handleTextEnteredEvent(event);
     // handling mouse events
@@ -94,6 +96,17 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
         }
 
         else if (event.key.code == sf::Keyboard::V) {
+            int currentLine = _cursor.getCurrentLine();
+            int currentChar = _cursor.getCurrentCharIdx();
+            int endLine = calculateEndLine(_cursor.getCurrentLine(), _buffer);
+            int endChar =
+                calculateEndChar(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx(), _buffer);
+
+            if (_buffer != "") {
+                _actionList.addToActionList(ActionType::ADDED, currentLine, currentChar, endLine,
+                                            endChar, _buffer);
+            }
+
             pasteContent();
         }
 
@@ -112,6 +125,11 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
         event.text.unicode == sf::Keyboard::Backspace) {
         _view.getDoc().deleteSelectionText(_select);
         _select.removeSelection();
+
+        _actionList.addToActionList(ActionType::REMOVED, _select.getStartCharLine().second,
+                                    _select.getStartCharLine().first, -1, -1,
+                                    _select.getSelectionData());
+
     }
 
     // deleting a single char at cursor position
@@ -137,6 +155,9 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
             currentCharIdx = _view.getDoc().getLine(currentLine).length();
         }
         _cursor.setCursorPos(currentLine, currentCharIdx - 1);
+        std::string charString(1, event.text.unicode);
+        _actionList.addToActionList(ActionType::REMOVED, currentLine, currentCharIdx, -1, -1,
+                                    charString);
     }
     // prevents spacing on an empty line.
     if (event.type == sf::Event::KeyReleased && event.text.unicode == sf::Keyboard::Space &&
@@ -193,8 +214,23 @@ bool EventHandler::isCursorPosValid(int line) {
 
 Selection& EventHandler::getSelection() const { return _select; }
 
-void ActionList::addToActionList(action actionName, const int startLine, const int startChar,
-                                 std::string str) {}
+void ActionList::addToActionList(ActionType actionName, const int startLine, const int startChar,
+                                 const int endLine, const int endChar, std::string str) {
+    Action newAction;
+    newAction.actionType = actionName;
+    newAction.startLine = startLine;
+    newAction.endLine = endLine;
+    newAction.endChar = endChar;
+    newAction.str = str;
+
+    _lastActions.push_back(newAction);
+}
+
+Action ActionList::popLastAction() {
+    Action currentAction = _lastActions.back();
+    _lastActions.pop_back();
+    return currentAction;
+}
 
 std::pair<int, int> EventHandler::mapPixelsToLineChar(int x, int y) {
     sf::Text text;
@@ -225,11 +261,20 @@ void EventHandler::handleTextEnteredEvent(sf::Event& event) {
         if (_lastKey == 13 /*Carridge return*/) {
             _view.getDoc().addTextToLine(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx(),
                                          '\n');
+
+            _actionList.addToActionList(ActionType::ADDED, _cursor.getCurrentLine(),
+                                        _cursor.getCurrentCharIdx(), _cursor.getCurrentLine() + 1,
+                                        0, "\n");
+
             _cursor.setCursorPos(_cursor.getCurrentLine() + 1, 0);
             _lastEvent = event.type;
             _lastKey = static_cast<char>(event.text.unicode);
             return;
         }
+        std::string charString(1, _lastKey);
+        _actionList.addToActionList(ActionType::ADDED, _cursor.getCurrentLine(),
+                                    _cursor.getCurrentCharIdx(), _cursor.getCurrentLine(),
+                                    _cursor.getCurrentCharIdx(), charString);
 
         _view.getDoc().addTextToLine(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx(),
                                      _lastKey);

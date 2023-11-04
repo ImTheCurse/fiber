@@ -7,10 +7,11 @@
 
 class EditorView;
 
-enum class action { ADDED, REMOVED };
+enum class ActionType { ADDED, REMOVED };
 
+// if endLine and endChar could be -1, if an action is needed to be added back.
 struct Action {
-    action actionType;
+    ActionType actionType;
     int startLine;
     int startChar;
     int endLine;
@@ -18,13 +19,16 @@ struct Action {
     std::string str;
 };
 
+// used as a class to store last actions, for ctrl-z functionality.
 class ActionList {
   public:
-    void addToActionList(action actionName, const int startLine, const int startChar,
-                         std::string str);
-    Action popLastAction() const;
+    ActionList() {}
+    void addToActionList(ActionType actionName, const int startLine, const int startChar,
+                         const int endLine, const int endChar, std::string str);
+    Action popLastAction();
 
   private:
+    ActionType _actionType;
     std::list<Action> _lastActions;
 };
 
@@ -40,6 +44,7 @@ class EventHandler : public ActionList {
     EditorView& _view;
     TextCursor& _cursor;
     Selection& _select;
+    ActionList _actionList;
 
     std::string _buffer;
 

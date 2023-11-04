@@ -24,6 +24,8 @@ src/Handlers/EventHandler.cpp
 src/Handlers/EventHandler.hpp
 src/Events/Selection.cpp
 src/Events/Selection.hpp
+src/util.cpp
+src/util.hpp
 
 )
 target_link_libraries(fiber PRIVATE sfml-graphics)
