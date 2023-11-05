@@ -5,15 +5,22 @@
 #include "../util.hpp"
 
 #define MARGIN_X_OFFSET 40
+#define CTRL_C 3
+#define CTRL_V 22
+#define CTRL_Z 26
+#define BACKSPACE 8
+#define CTRL_S 19
+
 EventHandler::EventHandler(EditorView& editorView, TextCursor& textCursor, Selection& select)
     : _view(editorView), _cursor(textCursor), _select(select) {}
 
 void EventHandler::handleEvents(sf::RenderWindow& window, sf::Event& event) {
     // handling constant keyPress "events"(not events, because events holds only a sinle value at a
     // time)
-    ActionList _actionList;
+
     handleKeyPressedEvents(event);
     handleTextEnteredEvent(event);
+    ActionList _actionList;
     // handling mouse events
     if (event.type == sf::Event::MouseButtonPressed ||
         event.type == sf::Event::MouseWheelScrolled ||
@@ -93,6 +100,7 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
             // moving from selection buffer to EventBuffer.
             _buffer.clear();
             _buffer = _select.getSelectionData();
+            return;
         }
 
         else if (event.key.code == sf::Keyboard::V) {
@@ -108,6 +116,28 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
             }
 
             pasteContent();
+        } else if (event.key.code == sf::Keyboard::Z && event.type == sf::Event::KeyReleased &&
+                   _lastEvent == sf::Event::TextEntered && !_wasLastKeyReleased) {
+            Action lastAction = _actionList.popLastAction();
+            if (lastAction.startLine == -1) {
+                return;
+            }
+
+            _select.createSelection(lastAction.startLine, lastAction.startChar, lastAction.endLine,
+                                    lastAction.endChar);
+
+            if (lastAction.actionType == ActionType::ADDED &&
+                (lastAction.endChar >= 0 || lastAction.endLine >= 0)) {
+                _view.getDoc().deleteSelectionText(_select);
+                // TODO set cursor position
+            }
+
+            if (lastAction.actionType == ActionType::REMOVED) {
+                _view.getDoc().addTextToLine(lastAction.startLine, lastAction.startChar,
+                                             lastAction.str);
+                // TODO set cursor position
+            }
+
         }
 
         else if (event.key.code == sf::Keyboard::S && event.type == sf::Event::KeyReleased &&
@@ -123,13 +153,12 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
     // deleting selctioned characters
     if (_select.isSelection() && event.type == sf::Event::KeyReleased &&
         event.text.unicode == sf::Keyboard::Backspace) {
-        _view.getDoc().deleteSelectionText(_select);
-        _select.removeSelection();
-
         _actionList.addToActionList(ActionType::REMOVED, _select.getStartCharLine().second,
                                     _select.getStartCharLine().first, -1, -1,
                                     _select.getSelectionData());
 
+        _view.getDoc().deleteSelectionText(_select);
+        _lastKey = BACKSPACE;  // backspace key
     }
 
     // deleting a single char at cursor position
@@ -144,6 +173,10 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
 
         if (isCursorPosValid(currentLine)) {
             try {
+                std::string charString(1,
+                                       _view.getDoc().getCharAt(currentLine, currentCharIdx - 1));
+                _actionList.addToActionList(ActionType::REMOVED, currentLine, currentCharIdx - 1,
+                                            -1, -1, charString);
                 _view.getDoc().deleteTextFromLine(currentLine, currentCharIdx - 1, 1);
             } catch (const std::out_of_range& err) {
                 std::cout << "Exception was thrown: " << err.what() << std::endl;
@@ -155,9 +188,6 @@ void EventHandler::handleKeyPressedEvents(sf::Event event) {
             currentCharIdx = _view.getDoc().getLine(currentLine).length();
         }
         _cursor.setCursorPos(currentLine, currentCharIdx - 1);
-        std::string charString(1, event.text.unicode);
-        _actionList.addToActionList(ActionType::REMOVED, currentLine, currentCharIdx, -1, -1,
-                                    charString);
     }
     // prevents spacing on an empty line.
     if (event.type == sf::Event::KeyReleased && event.text.unicode == sf::Keyboard::Space &&
@@ -219,6 +249,7 @@ void ActionList::addToActionList(ActionType actionName, const int startLine, con
     Action newAction;
     newAction.actionType = actionName;
     newAction.startLine = startLine;
+    newAction.startChar = startChar;
     newAction.endLine = endLine;
     newAction.endChar = endChar;
     newAction.str = str;
@@ -227,6 +258,11 @@ void ActionList::addToActionList(ActionType actionName, const int startLine, con
 }
 
 Action ActionList::popLastAction() {
+    if (_lastActions.empty()) {
+        Action emptyAction;
+        emptyAction.startLine = -1;
+        return emptyAction;
+    }
     Action currentAction = _lastActions.back();
     _lastActions.pop_back();
     return currentAction;
@@ -255,8 +291,8 @@ std::pair<int, int> EventHandler::mapPixelsToLineChar(int x, int y) {
 
 void EventHandler::handleTextEnteredEvent(sf::Event& event) {
     if (event.type == sf::Event::KeyReleased && _lastEvent == sf::Event::TextEntered) {
-        if (_lastKey == 8 /*backspace key*/ || _lastKey == 27 ||
-            _lastKey == 19 /*key pressed after save*/)
+        if (_lastKey == BACKSPACE || _lastKey == 27 || _lastKey == CTRL_S || _lastKey == CTRL_Z ||
+            _lastKey == CTRL_C || _lastKey == CTRL_V)
             return;
         if (_lastKey == 13 /*Carridge return*/) {
             _view.getDoc().addTextToLine(_cursor.getCurrentLine(), _cursor.getCurrentCharIdx(),
